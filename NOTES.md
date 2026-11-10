@@ -1,16 +1,26 @@
-# Initial engineering notes
+# Engineering notes: Phases 1 and 2
 
-This repository currently provides the development setup and evaluator-compatible
-entry point. It is not a completed knowledge system. `answer()` deliberately abstains;
-fact extraction, retrieval, temporal selection, and conflict resolution remain to be built.
+The repository provides dataset inspection, validated SQLite ingestion, capture-date
+selection, and an evaluator-compatible entry point. It is not a completed knowledge
+system. `answer()` selects a capture and deliberately abstains; fact extraction,
+retrieval, effective-date reasoning, and conflict resolution remain to be built.
 
-The planned engine preserves each complete website snapshot independently. Queries
-without a date will use the newest supplied snapshot. Historical queries will use
-the latest supplied snapshot on or before the requested date. Snapshot capture dates
-and dates when claims take effect will be represented separately. Source authority
-and product qualifiers will inform conflict resolution.
+The engine preserves each complete capture independently using a page primary key
+of `(snapshot_id, url)`. It stores original Markdown, separately normalized line
+endings, title, crawl timestamp, and content hashes. Snapshot IDs are immutable:
+identical replays are safe and changed data under the same ID is rejected. Writes
+are transactional. A lock serializes SQLite connection access across the harness's
+main ingestion thread and answer worker. Each `build()` uses fresh in-memory storage.
+An optional developer command can persist a database under `.local/`.
 
-Initial runtime dependencies: Python 3.11 standard library only. API keys: none.
+Without a query date, the newest available capture is selected. Historical queries
+use the latest capture on or before the requested date, including dates between
+captures. No evidence before the earliest capture causes abstention. Dates after the
+last capture use the latest known evidence, not a live confirmation. Removed pages
+are not carried forward. Claim effective dates and expired promotions will be
+handled by later extraction/resolution stages, separately from capture dates.
+
+Runtime dependencies: Python 3.11 standard library only, including sqlite3. API keys: none.
 Development dependencies: pytest and Ruff, pinned in requirements-dev.txt.
 
 The supplied participant kit, website snapshots, generated evidence, and evaluation

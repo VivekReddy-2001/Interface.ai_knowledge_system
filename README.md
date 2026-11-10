@@ -3,8 +3,9 @@
 A Python project for the interface.ai knowledge-system assignment: answer from
 dated website snapshots, cite evidence, and resolve conflicting claims.
 
-**Status:** development scaffold only. The engine accepts snapshots and safely
-abstains. Knowledge extraction and answering will be implemented step by step.
+**Status:** Phases 1 and 2 are implemented: dataset inventory, SQLite snapshot
+storage, and capture-date selection. The engine still abstains while retrieval,
+fact extraction, and conflict resolution are being built.
 
 ## Windows setup
 
@@ -53,6 +54,30 @@ harness unpacks the five inner snapshot ZIPs on its first run. Evaluation result
 are written to `.local/results/`, also ignored. The public evaluation does not
 fully measure hidden-set performance or conflict detection.
 
+If your terminal is **Command Prompt** rather than PowerShell, import with:
+
+```cmd
+.\.venv\Scripts\python.exe scripts\import_kit.py "%USERPROFILE%\Downloads\hackathon-knowledge-kit-participant.zip"
+```
+
+## Learn and run Phases 1 and 2
+
+Read [Phase 1](docs/phase-1.md) and [Phase 2](docs/phase-2.md) for code walkthroughs,
+dataset findings, design decisions, tests, and debugging exercises.
+
+With the virtual environment activated, these commands work in Command Prompt:
+
+```cmd
+python scripts\inspect_snapshots.py --find auto-motorcycle-loans --find savings-account
+python scripts\check_ingestion.py --as-of 2026-05-31
+python scripts\check_ingestion.py --database .local\evidence.sqlite
+python -m pytest -v
+```
+
+The inspection report is `.local/reports/inventory.json`. The demonstration reuses
+the supplied loader; the engine's `ingest()` receives already loaded objects.
+No API keys or additional runtime packages are needed; SQLite is included in Python.
+
 ## Development checks
 
 ```powershell
@@ -69,10 +94,15 @@ On macOS/Linux, create the environment with `python3.11 -m venv .venv` and use
 ```text
 solution.py                    Evaluator entry point: build() and three methods
 knowledge_now/models.py        Types for development without the participant kit
+knowledge_now/ingestion.py     Atomic, immutable snapshot/page storage
+knowledge_now/temporal.py      Capture-date validation and selection
+scripts/inspect_snapshots.py   Inventory, file checks, and raw-content changes
+scripts/check_ingestion.py     Demonstrate ingestion and date selection
 scripts/import_kit.py          Import the supplied ZIP into an ignored folder
 scripts/evaluate.py            Run the official local evaluator
 scripts/setup.ps1              Optional Windows bootstrap
-tests/                        Synthetic contract smoke test
+tests/                        Synthetic contract, inventory, ingestion, and date tests
+docs/                         Phase walkthroughs and learning exercises
 .vscode/                      Interpreter, extensions, tasks, and debugger
 .github/workflows/checks.yml   Python 3.11 lint, format, and test checks
 requirements.txt              Runtime requirements (none initially)

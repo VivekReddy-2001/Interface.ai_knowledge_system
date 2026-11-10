@@ -40,3 +40,25 @@ class Conflict:
     sources: list[Source]
     resolution: str | None = None
     reason: str | None = None
+
+
+@dataclass(frozen=True)
+class SnapshotInfo:
+    """Small metadata record used to choose a snapshot before loading its pages."""
+
+    snapshot_id: str
+    taken_on: str
+    page_count: int
+
+
+@dataclass(frozen=True)
+class StoredPage:
+    """A page version with original evidence and a separate normalized copy."""
+
+    snapshot_id: str
+    url: str
+    title: str
+    fetched_at: str
+    markdown: str
+    normalized_markdown: str
+    content_hash: str
