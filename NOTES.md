@@ -1,9 +1,16 @@
-# Engineering notes: Phases 1 and 2
+# Engineering notes: Phases 1, 2, and 3a
 
 The repository provides dataset inspection, validated SQLite ingestion, capture-date
 selection, and an evaluator-compatible entry point. It is not a completed knowledge
 system. `answer()` selects a capture and deliberately abstains; fact extraction,
-retrieval, effective-date reasoning, and conflict resolution remain to be built.
+ranked retrieval, effective-date reasoning, and conflict resolution remain to be built.
+
+Phase 3a constructs passage and complete Markdown-table evidence units from a
+selected stored page version. Units preserve source URLs, snapshot IDs, original
+quotes, line ranges, content hashes, headings, and neighboring prose context.
+The source quote and enriched search text are separate. Nearby context does not
+establish applicability or authority. Units are not yet indexed or used by answer();
+the inspection command demonstrates construction on a manually selected URL.
 
 The engine preserves each complete capture independently using a page primary key
 of `(snapshot_id, url)`. It stores original Markdown, separately normalized line

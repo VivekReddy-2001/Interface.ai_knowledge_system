@@ -4,8 +4,9 @@ A Python project for the interface.ai knowledge-system assignment: answer from
 dated website snapshots, cite evidence, and resolve conflicting claims.
 
 **Status:** Phases 1 and 2 are implemented: dataset inventory, SQLite snapshot
-storage, and capture-date selection. The engine still abstains while retrieval,
-fact extraction, and conflict resolution are being built.
+storage, and capture-date selection. Phase 3a adds provenance-preserving evidence
+units. Ranked retrieval is not implemented yet. The engine still abstains while
+retrieval, fact extraction, and conflict resolution are being built.
 
 ## Windows setup
 
@@ -78,6 +79,18 @@ The inspection report is `.local/reports/inventory.json`. The demonstration reus
 the supplied loader; the engine's `ingest()` receives already loaded objects.
 No API keys or additional runtime packages are needed; SQLite is included in Python.
 
+## Inspect an evidence unit (Phase 3a)
+
+Read the [evidence-unit walkthrough](docs/phase-3-evidence.md) before running:
+
+```cmd
+python scripts\inspect_evidence.py --url https://www.dupaco.com/personal/savings-account --as-of 2026-05-31 --kind table --contains "10 Month"
+```
+
+This selects a stored capture, gets an already stored page by URL, and builds table
+and passage units. It does not fetch the live website or rank questions. The private
+report is `.local/reports/evidence-units.json`; the source URL is an identifier.
+
 ## Development checks
 
 ```powershell
@@ -96,8 +109,10 @@ solution.py                    Evaluator entry point: build() and three methods
 knowledge_now/models.py        Types for development without the participant kit
 knowledge_now/ingestion.py     Atomic, immutable snapshot/page storage
 knowledge_now/temporal.py      Capture-date validation and selection
+knowledge_now/parsing.py       Source-preserving passage/table evidence units
 scripts/inspect_snapshots.py   Inventory, file checks, and raw-content changes
 scripts/check_ingestion.py     Demonstrate ingestion and date selection
+scripts/inspect_evidence.py    Inspect units from one stored source page
 scripts/import_kit.py          Import the supplied ZIP into an ignored folder
 scripts/evaluate.py            Run the official local evaluator
 scripts/setup.ps1              Optional Windows bootstrap
