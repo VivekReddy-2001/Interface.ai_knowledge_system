@@ -1,6 +1,7 @@
 """Assignment entry point. This scaffold abstains until evidence extraction is built."""
 
 from knowledge_now.ingestion import SnapshotStore
+from knowledge_now.retrieval import EvidenceRetriever
 
 try:
     # The official evaluator provides this module on its import path.
@@ -16,9 +17,11 @@ class KnowledgeSystem:
 
     def __init__(self) -> None:
         self._store = SnapshotStore()
+        self._retriever = EvidenceRetriever(self._store)
 
     def ingest(self, snapshot: Snapshot) -> None:
         self._store.ingest(snapshot)
+        self._retriever.prepare(snapshot.snapshot_id)
 
     def answer(self, question: str, as_of: str | None = None) -> Answer:
         try:

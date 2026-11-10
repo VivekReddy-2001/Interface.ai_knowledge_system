@@ -1,1 +1,1 @@
-# No third-party runtime dependencies are required by the initial scaffold.
+# No third-party runtime dependencies. Python's SQLite must include FTS5.

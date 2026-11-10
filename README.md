@@ -4,9 +4,9 @@ A Python project for the interface.ai knowledge-system assignment: answer from
 dated website snapshots, cite evidence, and resolve conflicting claims.
 
 **Status:** Phases 1 and 2 are implemented: dataset inventory, SQLite snapshot
-storage, and capture-date selection. Phase 3a adds provenance-preserving evidence
-units. Ranked retrieval is not implemented yet. The engine still abstains while
-retrieval, fact extraction, and conflict resolution are being built.
+storage, and capture-date selection. Phase 3 adds provenance-preserving evidence
+units and snapshot-scoped BM25 candidate search. The engine still abstains while
+qualified fact extraction, conflict resolution, and supported answering are built.
 
 ## Windows setup
 
@@ -91,6 +91,19 @@ This selects a stored capture, gets an already stored page by URL, and builds ta
 and passage units. It does not fetch the live website or rank questions. The private
 report is `.local/reports/evidence-units.json`; the source URL is an identifier.
 
+## Search candidate evidence (Phase 3b)
+
+Read the [BM25 retrieval walkthrough](docs/phase-3-retrieval.md), then run:
+
+```cmd
+python scripts\search_evidence.py "What was the 10-month fixed jumbo certificate APY?" --as-of 2026-05-31 --top-k 5
+```
+
+No source URL is required. Search uses SQLite FTS5/BM25 within the selected capture;
+no embedding API or vector database is used. Results are candidate evidence, not
+confirmed answers. Scores measure lexical relevance, not confidence or authority.
+The private full report is `.local/reports/search-results.json`.
+
 ## Development checks
 
 ```powershell
@@ -110,9 +123,11 @@ knowledge_now/models.py        Types for development without the participant kit
 knowledge_now/ingestion.py     Atomic, immutable snapshot/page storage
 knowledge_now/temporal.py      Capture-date validation and selection
 knowledge_now/parsing.py       Source-preserving passage/table evidence units
+knowledge_now/retrieval.py     Per-snapshot FTS5/BM25 candidate ranking
 scripts/inspect_snapshots.py   Inventory, file checks, and raw-content changes
 scripts/check_ingestion.py     Demonstrate ingestion and date selection
 scripts/inspect_evidence.py    Inspect units from one stored source page
+scripts/search_evidence.py     Search candidates without specifying a source URL
 scripts/import_kit.py          Import the supplied ZIP into an ignored folder
 scripts/evaluate.py            Run the official local evaluator
 scripts/setup.ps1              Optional Windows bootstrap

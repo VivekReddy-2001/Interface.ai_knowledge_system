@@ -89,3 +89,11 @@ class EvidenceUnit:
         return "\n".join(
             [self.title, *self.headings, self.context_before, self.text, self.context_after]
         )
+
+
+@dataclass(frozen=True)
+class SearchHit:
+    """Ranked candidate evidence. The relevance score is not answer confidence."""
+
+    unit: EvidenceUnit
+    score: float

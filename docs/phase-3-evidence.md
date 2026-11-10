@@ -1,8 +1,9 @@
 # Phase 3a: what retrieval will search
 
-This is the evidence-unit layer, the first part of retrieval. We have not added
-BM25, embeddings, an LLM, or automatic source discovery yet. `answer()` continues
-to abstain. The parser creates candidate evidence; it does not decide what is true.
+This is the evidence-unit layer, the first part of retrieval. The parser does not
+rank evidence or decide what is true. The subsequent [BM25 layer](phase-3-retrieval.md)
+now searches these units automatically. `answer()` continues to abstain while
+financial interpretation and resolution are being built.
 
 ## Where the text comes from
 
@@ -133,12 +134,12 @@ is also checked locally for exact quote slices without publishing its contents.
 
 This small parser is not a full CommonMark renderer. HTML tables, complex nested
 tables, and alternate heading syntax have no special treatment. Unrecognized text
-is retained as passages. Units are generated on demand, not persisted, indexed, or
-connected to `answer()` yet. Nearby context is not a resolved applicability rule.
+is retained as passages. The parser returns units in memory; the separate BM25 layer
+indexes them during ingestion. Nearby context is not a resolved applicability rule.
 
-Next: index these units during ingestion and implement BM25 candidate ranking after
-capture selection. A high relevance score will still require qualifier matching,
-effective-date analysis, and conflict resolution before producing an answer.
+Continue with the [BM25 retrieval walkthrough](phase-3-retrieval.md). A high relevance
+score still requires qualifier matching, effective-date analysis, and conflict
+resolution before producing an answer.
 
 Interview explanation: "I retrieve from supplied, versioned website evidence. I
 construct passages and intact financial tables with source identity, heading

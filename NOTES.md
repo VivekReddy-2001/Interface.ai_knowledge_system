@@ -1,16 +1,23 @@
-# Engineering notes: Phases 1, 2, and 3a
+# Engineering notes: Phases 1, 2, and 3
 
 The repository provides dataset inspection, validated SQLite ingestion, capture-date
 selection, and an evaluator-compatible entry point. It is not a completed knowledge
-system. `answer()` selects a capture and deliberately abstains; fact extraction,
-ranked retrieval, effective-date reasoning, and conflict resolution remain to be built.
+system. `answer()` selects a capture and deliberately abstains; qualified facts,
+effective-date reasoning, conflict resolution, and supported answering remain to be built.
 
 Phase 3a constructs passage and complete Markdown-table evidence units from a
 selected stored page version. Units preserve source URLs, snapshot IDs, original
 quotes, line ranges, content hashes, headings, and neighboring prose context.
 The source quote and enriched search text are separate. Nearby context does not
-establish applicability or authority. Units are not yet indexed or used by answer();
-the inspection command demonstrates construction on a manually selected URL.
+establish applicability or authority. The inspection command demonstrates construction
+on a manually selected URL.
+
+Phase 3b indexes units during ingestion using SQLite FTS5 with BM25. Each snapshot
+has its own index so later captures cannot affect historical matches or corpus
+statistics. Body/metadata/context weights are 4/2/0.5; stemming is English Porter.
+Queries use sanitized quoted tokens with OR matching, deterministic ties, and
+capture selection before scoring. A separate CLI exposes ranked evidence; these
+hits are not yet converted to member-facing answers. Relevance is not authority.
 
 The engine preserves each complete capture independently using a page primary key
 of `(snapshot_id, url)`. It stores original Markdown, separately normalized line
@@ -27,7 +34,7 @@ last capture use the latest known evidence, not a live confirmation. Removed pag
 are not carried forward. Claim effective dates and expired promotions will be
 handled by later extraction/resolution stages, separately from capture dates.
 
-Runtime dependencies: Python 3.11 standard library only, including sqlite3. API keys: none.
+Runtime dependencies: Python 3.11 standard library, with SQLite FTS5 enabled. API keys: none.
 Development dependencies: pytest and Ruff, pinned in requirements-dev.txt.
 
 The supplied participant kit, website snapshots, generated evidence, and evaluation
