@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug smoke tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["tests", "-v"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Debug public evaluation",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.local/kit/harness/run_eval.py",
+      "args": [
+        "--submission", "${workspaceFolder}",
+        "--snapshots", "${workspaceFolder}/.local/kit/snapshots",
+        "--eval", "${workspaceFolder}/.local/kit/eval/public_eval.jsonl",
+        "--out", "${workspaceFolder}/.local/results/debug"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}

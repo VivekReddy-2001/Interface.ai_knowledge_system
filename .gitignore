@@ -1,0 +1,30 @@
+# Supplied assignment materials and generated evidence must remain local.
+.local/
+attachments/
+snapshots/
+snapshots_zip/
+results/
+data/
+indexes/
+*.zip
+*.pdf
+*.sqlite*
+*.db
+
+# Credentials and Python tooling.
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+.DS_Store
+Thumbs.db
